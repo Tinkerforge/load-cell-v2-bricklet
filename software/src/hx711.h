@@ -1,7 +1,7 @@
 /* load-cell-v2-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
  *
- * config.h: All configurations for Load Cell V2 Bricklet
+ * hx711.h: HX711 load cell ADC driver
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,29 +19,33 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef CONFIG_GENERAL_H
-#define CONFIG_GENERAL_H
+#ifndef HX711_H
+#define HX711_H
 
-#include "xmc_device.h"
+#include <stdint.h>
 
-#define STARTUP_SYSTEM_INIT_ALREADY_DONE
-#define SYSTEM_TIMER_FREQUENCY 1000 // Use 1 kHz system timer
+#include "bricklib2/utility/moving_average.h"
 
-#define UARTBB_TX_PIN P2_1
+typedef struct {
+	uint8_t gain;
+	uint8_t rate;
 
-#define CALLBACK_VALUE_TYPE CALLBACK_VALUE_TYPE_INT32
+	uint32_t offset;
+	uint32_t gain_mul;
+	uint32_t gain_div;
 
-#define MOVING_AVERAGE_TYPE      MOVING_AVERAGE_TYPE_INT32
-#define MOVING_AVERAGE_SUM_TYPE  MOVING_AVERAGE_TYPE_INT32
+	int32_t tare_value;
 
-#define MOVING_AVERAGE_MAX_LENGTH     100
-#define MOVING_AVERAGE_DEFAULT_LENGTH 4
+	int32_t weight;
 
+	MovingAverage moving_average_weight;
+} HX711;
 
-#define FIRMWARE_VERSION_MAJOR 2
-#define FIRMWARE_VERSION_MINOR 0
-#define FIRMWARE_VERSION_REVISION 0
+extern HX711 hx711;
 
-#include "config_custom_bootloader.h"
+int32_t hx711_get_weight(void);
+void hx711_calibration_write(void);
+void hx711_init(void);
+void hx711_tick(void);
 
 #endif

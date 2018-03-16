@@ -1,7 +1,7 @@
 /* load-cell-v2-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
  *
- * config.h: All configurations for Load Cell V2 Bricklet
+ * config_hx711.h: HX711 specific configurations
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,29 +19,24 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef CONFIG_GENERAL_H
-#define CONFIG_GENERAL_H
+#ifndef CONFIG_HX711_H
+#define CONFIG_HX711_H
 
-#include "xmc_device.h"
+#include "xmc_gpio.h"
 
-#define STARTUP_SYSTEM_INIT_ALREADY_DONE
-#define SYSTEM_TIMER_FREQUENCY 1000 // Use 1 kHz system timer
+#define HX711_CALIBRATION_PAGE           1
+#define HX711_CALIBRATION_MAGIC_POS      0
+#define HX711_CALIBRATION_OFFSET_POS     1
+#define HX711_CALIBRATION_MULTIPLIER_POS 2
+#define HX711_CALIBRATION_DIVISOR_POS    3
 
-#define UARTBB_TX_PIN P2_1
+#define HX711_CALIBRATION_MAGIC          0x12345678
 
-#define CALLBACK_VALUE_TYPE CALLBACK_VALUE_TYPE_INT32
+#define HX711_LED_PIN   P0_9
+#define HX711_RATE_PIN  P0_5
 
-#define MOVING_AVERAGE_TYPE      MOVING_AVERAGE_TYPE_INT32
-#define MOVING_AVERAGE_SUM_TYPE  MOVING_AVERAGE_TYPE_INT32
+#define HX711_CLK_PIN   P0_8
+#define HX711_DAT_PIN   P0_6
 
-#define MOVING_AVERAGE_MAX_LENGTH     100
-#define MOVING_AVERAGE_DEFAULT_LENGTH 4
-
-
-#define FIRMWARE_VERSION_MAJOR 2
-#define FIRMWARE_VERSION_MINOR 0
-#define FIRMWARE_VERSION_REVISION 0
-
-#include "config_custom_bootloader.h"
 
 #endif

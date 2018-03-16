@@ -24,6 +24,11 @@
 #include "bricklib2/utility/communication_callback.h"
 #include "bricklib2/protocols/tfp/tfp.h"
 #include "bricklib2/utility/callback_value.h"
+#include "bricklib2/utility/moving_average.h"
+
+#include "configs/config_hx711.h"
+#include "hx711.h"
+#include "xmc_gpio.h"
 
 CallbackValue callback_value_weight;
 
@@ -47,44 +52,84 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 
 
 BootloaderHandleMessageResponse set_moving_average(const SetMovingAverage *data) {
+	if((data->average > MOVING_AVERAGE_MAX_LENGTH) || (data->average < 1)) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
+	moving_average_new_length(&hx711.moving_average_weight, data->average);
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_moving_average(const GetMovingAverage *data, GetMovingAverage_Response *response) {
 	response->header.length = sizeof(GetMovingAverage_Response);
+	response->average       = hx711.moving_average_weight.length;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse set_led_configuration(const SetLEDConfiguration *data) {
+	if(data->enable) {
+		XMC_GPIO_SetOutputLow(HX711_LED_PIN);
+	} else {
+		XMC_GPIO_SetOutputHigh(HX711_LED_PIN);
+	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_led_configuration(const GetLEDConfiguration *data, GetLEDConfiguration_Response *response) {
 	response->header.length = sizeof(GetLEDConfiguration_Response);
+	response->enable        = !XMC_GPIO_GetInput(HX711_LED_PIN);
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse calibrate(const Calibrate *data) {
+	if(data->weight == 0) {
+		hx711.offset = hx711.weight;
+	} else {
+		int32_t offset = hx711.weight - hx711.offset;
+		if(offset < 0) {
+			offset = 0;
+		}
+
+		hx711.gain_mul = data->weight;
+		hx711.gain_div = offset;
+
+		hx711_calibration_write();
+	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse tare(const Tare *data) {
+	hx711.tare_value -= hx711_get_weight();
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse set_configuration(const SetConfiguration *data) {
+	if((data->gain > LOAD_CELL_V2_GAIN_32X) || (data->rate > LOAD_CELL_V2_RATE_80HZ)) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
+	hx711.gain = data->gain;
+	hx711.rate = data->rate;
+
+	if(hx711.rate == LOAD_CELL_V2_RATE_10HZ) {
+		XMC_GPIO_SetOutputLow(HX711_RATE_PIN);
+	} else {
+		XMC_GPIO_SetOutputHigh(HX711_RATE_PIN);
+	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_configuration(const GetConfiguration *data, GetConfiguration_Response *response) {
 	response->header.length = sizeof(GetConfiguration_Response);
+	response->gain          = hx711.gain;
+	response->rate          = hx711.rate;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
@@ -101,8 +146,7 @@ void communication_tick(void) {
 }
 
 void communication_init(void) {
-	// TODO: Add proper functions
-	callback_value_init(&callback_value_weight, NULL);;
+	callback_value_init(&callback_value_weight, hx711_get_weight);;
 
 	communication_callback_init();
 }
