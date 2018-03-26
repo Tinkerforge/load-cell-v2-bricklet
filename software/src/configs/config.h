@@ -1,5 +1,6 @@
 /* load-cell-v2-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
  *
  * config.h: All configurations for Load Cell V2 Bricklet
  *
@@ -29,6 +30,8 @@
 
 #define UARTBB_TX_PIN P2_1
 
+#define INFO_LED_PIN P0_9
+
 #define CALLBACK_VALUE_TYPE CALLBACK_VALUE_TYPE_INT32
 
 #define MOVING_AVERAGE_TYPE      MOVING_AVERAGE_TYPE_INT32
@@ -36,7 +39,6 @@
 
 #define MOVING_AVERAGE_MAX_LENGTH     100
 #define MOVING_AVERAGE_DEFAULT_LENGTH 4
-
 
 #define FIRMWARE_VERSION_MAJOR 2
 #define FIRMWARE_VERSION_MINOR 0

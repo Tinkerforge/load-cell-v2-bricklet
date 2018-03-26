@@ -1,5 +1,6 @@
 /* load-cell-v2-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
  *
  * communication.h: TFP protocol message handling
  *
@@ -40,6 +41,10 @@ void communication_init(void);
 #define LOAD_CELL_V2_THRESHOLD_OPTION_SMALLER '<'
 #define LOAD_CELL_V2_THRESHOLD_OPTION_GREATER '>'
 
+#define LOAD_CELL_V2_INFO_LED_CONFIGURATION_OFF 0
+#define LOAD_CELL_V2_INFO_LED_CONFIGURATION_ON 1
+#define LOAD_CELL_V2_INFO_LED_CONFIGURATION_HEARTBEAT 2
+
 #define LOAD_CELL_V2_RATE_10HZ 0
 #define LOAD_CELL_V2_RATE_80HZ 1
 
@@ -71,8 +76,8 @@ void communication_init(void);
 #define FID_GET_WEIGHT_CALLBACK_CONFIGURATION 3
 #define FID_SET_MOVING_AVERAGE 5
 #define FID_GET_MOVING_AVERAGE 6
-#define FID_SET_LED_CONFIGURATION 7
-#define FID_GET_LED_CONFIGURATION 8
+#define FID_SET_INFO_LED_CONFIGURATION 7
+#define FID_GET_INFO_LED_CONFIGURATION 8
 #define FID_CALIBRATE 9
 #define FID_TARE 10
 #define FID_SET_CONFIGURATION 11
@@ -96,17 +101,17 @@ typedef struct {
 
 typedef struct {
 	TFPMessageHeader header;
-	bool enable;
-} __attribute__((__packed__)) SetLEDConfiguration;
+	uint8_t configuration;
+} __attribute__((__packed__)) SetInfoLEDConfiguration;
 
 typedef struct {
 	TFPMessageHeader header;
-} __attribute__((__packed__)) GetLEDConfiguration;
+} __attribute__((__packed__)) GetInfoLEDConfiguration;
 
 typedef struct {
 	TFPMessageHeader header;
-	bool enable;
-} __attribute__((__packed__)) GetLEDConfiguration_Response;
+	uint8_t configuration;
+} __attribute__((__packed__)) GetInfoLEDConfiguration_Response;
 
 typedef struct {
 	TFPMessageHeader header;
@@ -137,8 +142,8 @@ typedef struct {
 // Function prototypes
 BootloaderHandleMessageResponse set_moving_average(const SetMovingAverage *data);
 BootloaderHandleMessageResponse get_moving_average(const GetMovingAverage *data, GetMovingAverage_Response *response);
-BootloaderHandleMessageResponse set_led_configuration(const SetLEDConfiguration *data);
-BootloaderHandleMessageResponse get_led_configuration(const GetLEDConfiguration *data, GetLEDConfiguration_Response *response);
+BootloaderHandleMessageResponse set_info_led_configuration(const SetInfoLEDConfiguration *data);
+BootloaderHandleMessageResponse get_info_led_configuration(const GetInfoLEDConfiguration *data, GetInfoLEDConfiguration_Response *response);
 BootloaderHandleMessageResponse calibrate(const Calibrate *data);
 BootloaderHandleMessageResponse tare(const Tare *data);
 BootloaderHandleMessageResponse set_configuration(const SetConfiguration *data);

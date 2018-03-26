@@ -1,5 +1,6 @@
 /* load-cell-v2-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
  *
  * hx711.h: HX711 load cell ADC driver
  *
@@ -25,8 +26,12 @@
 #include <stdint.h>
 
 #include "bricklib2/utility/moving_average.h"
+#include "bricklib2/hal/system_timer/system_timer.h"
+#include "bricklib2/utility/led_flicker.h"
 
 typedef struct {
+	LEDFlickerState info_led_flicker_state;
+
 	uint8_t gain;
 	uint8_t rate;
 

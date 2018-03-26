@@ -1,5 +1,6 @@
 /* load-cell-v2-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
  *
  * hx711.c: HX711 load cell ADC driver
  *
@@ -95,6 +96,7 @@ void hx711_init(void) {
 	hx711.gain_mul = 1;
 	hx711.gain_div = 1;
 	hx711.tare_value = 0;
+	hx711.info_led_flicker_state = LED_FLICKER_CONFIG_OFF;
 
 	hx711_calibration_read();
 
@@ -104,10 +106,6 @@ void hx711_init(void) {
 		.mode         = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
 		.output_level = XMC_GPIO_OUTPUT_LEVEL_LOW,
 	};
-	const XMC_GPIO_CONFIG_t pin_high_config = {
-		.mode         = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
-		.output_level = XMC_GPIO_OUTPUT_LEVEL_HIGH,
-	};
 	const XMC_GPIO_CONFIG_t input_config = {
 		.mode             = XMC_GPIO_MODE_INPUT_TRISTATE,
 		.input_hysteresis = XMC_GPIO_INPUT_HYSTERESIS_STANDARD
@@ -115,9 +113,11 @@ void hx711_init(void) {
 
 	XMC_GPIO_Init(HX711_CLK_PIN, &pin_low_config);
 	XMC_GPIO_Init(HX711_RATE_PIN, &pin_low_config);
-	XMC_GPIO_Init(HX711_LED_PIN, &pin_high_config);
-
 	XMC_GPIO_Init(HX711_DAT_PIN, &input_config);
+
+	XMC_GPIO_Init(INFO_LED_PIN, &pin_low_config);
+
+	XMC_GPIO_SetOutputHigh(INFO_LED_PIN);
 }
 
 void hx711_tick(void) {
@@ -147,6 +147,10 @@ void hx711_tick(void) {
 		value += 0x800000;
 
 		hx711.weight = moving_average_handle_value(&hx711.moving_average_weight, value);
+	}
+
+	if(hx711.info_led_flicker_state.config == LED_FLICKER_CONFIG_HEARTBEAT) {
+		led_flicker_tick(&hx711.info_led_flicker_state, system_timer_get_ms(), INFO_LED_PIN);
 	}
 }
 

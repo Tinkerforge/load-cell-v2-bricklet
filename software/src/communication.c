@@ -1,5 +1,6 @@
 /* load-cell-v2-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
  *
  * communication.c: TFP protocol message handling
  *
@@ -40,8 +41,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_WEIGHT_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration(message, response, &callback_value_weight);
 		case FID_SET_MOVING_AVERAGE: return set_moving_average(message);
 		case FID_GET_MOVING_AVERAGE: return get_moving_average(message, response);
-		case FID_SET_LED_CONFIGURATION: return set_led_configuration(message);
-		case FID_GET_LED_CONFIGURATION: return get_led_configuration(message, response);
+		case FID_SET_INFO_LED_CONFIGURATION: return set_info_led_configuration(message);
+		case FID_GET_INFO_LED_CONFIGURATION: return get_info_led_configuration(message, response);
 		case FID_CALIBRATE: return calibrate(message);
 		case FID_TARE: return tare(message);
 		case FID_SET_CONFIGURATION: return set_configuration(message);
@@ -68,19 +69,27 @@ BootloaderHandleMessageResponse get_moving_average(const GetMovingAverage *data,
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-BootloaderHandleMessageResponse set_led_configuration(const SetLEDConfiguration *data) {
-	if(data->enable) {
-		XMC_GPIO_SetOutputLow(HX711_LED_PIN);
-	} else {
-		XMC_GPIO_SetOutputHigh(HX711_LED_PIN);
+BootloaderHandleMessageResponse set_info_led_configuration(const SetInfoLEDConfiguration *data) {
+	if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIGURATION_OFF) {
+		hx711.info_led_flicker_state.config = LED_FLICKER_CONFIG_OFF;
+		XMC_GPIO_SetOutputHigh(INFO_LED_PIN);
+	}
+	else if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIGURATION_ON) {
+		hx711.info_led_flicker_state.config = LED_FLICKER_CONFIG_ON;
+		XMC_GPIO_SetOutputLow(INFO_LED_PIN);
+	}
+	else if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIGURATION_HEARTBEAT) {
+		hx711.info_led_flicker_state.config = LED_FLICKER_CONFIG_HEARTBEAT;
+		hx711.info_led_flicker_state.start = system_timer_get_ms();
 	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
-BootloaderHandleMessageResponse get_led_configuration(const GetLEDConfiguration *data, GetLEDConfiguration_Response *response) {
-	response->header.length = sizeof(GetLEDConfiguration_Response);
-	response->enable        = !XMC_GPIO_GetInput(HX711_LED_PIN);
+BootloaderHandleMessageResponse get_info_led_configuration(const GetInfoLEDConfiguration *data,
+                                                           GetInfoLEDConfiguration_Response *response) {
+	response->header.length = sizeof(GetInfoLEDConfiguration_Response);
+	response->configuration = hx711.info_led_flicker_state.config;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

@@ -1,5 +1,6 @@
 /* load-cell-v2-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
  *
  * config_hx711.h: HX711 specific configurations
  *
@@ -32,11 +33,8 @@
 
 #define HX711_CALIBRATION_MAGIC          0x12345678
 
-#define HX711_LED_PIN   P0_9
 #define HX711_RATE_PIN  P0_5
-
 #define HX711_CLK_PIN   P0_8
 #define HX711_DAT_PIN   P0_6
-
 
 #endif
