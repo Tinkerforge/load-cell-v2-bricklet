@@ -115,9 +115,7 @@ void hx711_init(void) {
 	XMC_GPIO_Init(HX711_RATE_PIN, &pin_low_config);
 	XMC_GPIO_Init(HX711_DAT_PIN, &input_config);
 
-	XMC_GPIO_Init(INFO_LED_PIN, &pin_low_config);
-
-	XMC_GPIO_SetOutputHigh(INFO_LED_PIN);
+	XMC_GPIO_Init(INFO_LED_PIN, &pin_high_config);
 }
 
 void hx711_tick(void) {
