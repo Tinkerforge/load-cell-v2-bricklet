@@ -82,6 +82,9 @@ BootloaderHandleMessageResponse set_info_led_configuration(const SetInfoLEDConfi
 		hx711.info_led_flicker_state.config = LED_FLICKER_CONFIG_HEARTBEAT;
 		hx711.info_led_flicker_state.start = system_timer_get_ms();
 	}
+	else {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
