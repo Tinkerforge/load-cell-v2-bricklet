@@ -41,8 +41,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_WEIGHT_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration(message, response, &callback_value_weight);
 		case FID_SET_MOVING_AVERAGE: return set_moving_average(message);
 		case FID_GET_MOVING_AVERAGE: return get_moving_average(message, response);
-		case FID_SET_INFO_LED_CONFIGURATION: return set_info_led_configuration(message);
-		case FID_GET_INFO_LED_CONFIGURATION: return get_info_led_configuration(message, response);
+		case FID_SET_INFO_LED_CONFIG: return set_info_led_config(message);
+		case FID_GET_INFO_LED_CONFIG: return get_info_led_config(message, response);
 		case FID_CALIBRATE: return calibrate(message);
 		case FID_TARE: return tare(message);
 		case FID_SET_CONFIGURATION: return set_configuration(message);
@@ -69,16 +69,16 @@ BootloaderHandleMessageResponse get_moving_average(const GetMovingAverage *data,
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-BootloaderHandleMessageResponse set_info_led_configuration(const SetInfoLEDConfiguration *data) {
-	if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIGURATION_OFF) {
+BootloaderHandleMessageResponse set_info_led_config(const SetInfoLEDConfiguration *data) {
+	if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIG_OFF) {
 		hx711.info_led_flicker_state.config = LED_FLICKER_CONFIG_OFF;
 		XMC_GPIO_SetOutputHigh(INFO_LED_PIN);
 	}
-	else if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIGURATION_ON) {
+	else if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIG_ON) {
 		hx711.info_led_flicker_state.config = LED_FLICKER_CONFIG_ON;
 		XMC_GPIO_SetOutputLow(INFO_LED_PIN);
 	}
-	else if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIGURATION_HEARTBEAT) {
+	else if(data->configuration == LOAD_CELL_V2_INFO_LED_CONFIG_HEARTBEAT) {
 		hx711.info_led_flicker_state.config = LED_FLICKER_CONFIG_HEARTBEAT;
 		hx711.info_led_flicker_state.start = system_timer_get_ms();
 	}
@@ -89,8 +89,8 @@ BootloaderHandleMessageResponse set_info_led_configuration(const SetInfoLEDConfi
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
-BootloaderHandleMessageResponse get_info_led_configuration(const GetInfoLEDConfiguration *data,
-                                                           GetInfoLEDConfiguration_Response *response) {
+BootloaderHandleMessageResponse get_info_led_config(const GetInfoLEDConfiguration *data,
+                                                    GetInfoLEDConfiguration_Response *response) {
 	response->header.length = sizeof(GetInfoLEDConfiguration_Response);
 	response->configuration = hx711.info_led_flicker_state.config;
 
