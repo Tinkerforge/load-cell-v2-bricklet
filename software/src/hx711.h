@@ -35,9 +35,9 @@ typedef struct {
 	uint8_t gain;
 	uint8_t rate;
 
-	uint32_t offset;
-	uint32_t gain_mul;
-	uint32_t gain_div;
+	int32_t offset;
+	int32_t gain_mul;
+	int32_t gain_div;
 
 	int32_t tare_value;
 

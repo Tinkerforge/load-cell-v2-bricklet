@@ -102,8 +102,8 @@ BootloaderHandleMessageResponse calibrate(const Calibrate *data) {
 		hx711.offset = hx711.weight;
 	} else {
 		int32_t offset = hx711.weight - hx711.offset;
-		if(offset < 0) {
-			offset = 0;
+		if(offset == 0) { // Don't allow offset of zero (results in divide by 0)
+			return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 		}
 
 		hx711.gain_mul = data->weight;
