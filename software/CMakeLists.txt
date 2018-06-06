@@ -44,7 +44,6 @@ SET(SOURCES
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/utility/led_flicker.c"
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/utility/pearson_hash.c"
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/utility/communication_callback.c"
-	"${PROJECT_SOURCE_DIR}/src/bricklib2/utility/callback_value.c"
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/utility/moving_average.c"
 
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/xmclib/XMCLib/src/xmc_gpio.c"

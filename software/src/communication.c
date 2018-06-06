@@ -31,14 +31,13 @@
 #include "hx711.h"
 #include "xmc_gpio.h"
 
-CallbackValue callback_value_weight;
-
+CallbackValue_int32_t callback_value_weight;
 
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
 	switch(tfp_get_fid_from_message(message)) {
-		case FID_GET_WEIGHT: return get_callback_value(message, response, &callback_value_weight);
-		case FID_SET_WEIGHT_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration(message, &callback_value_weight);
-		case FID_GET_WEIGHT_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration(message, response, &callback_value_weight);
+		case FID_GET_WEIGHT: return get_callback_value_int32_t(message, response, &callback_value_weight);
+		case FID_SET_WEIGHT_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_weight);
+		case FID_GET_WEIGHT_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_weight);
 		case FID_SET_MOVING_AVERAGE: return set_moving_average(message);
 		case FID_GET_MOVING_AVERAGE: return get_moving_average(message, response);
 		case FID_SET_INFO_LED_CONFIG: return set_info_led_config(message);
@@ -50,7 +49,6 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
-
 
 BootloaderHandleMessageResponse set_moving_average(const SetMovingAverage *data) {
 	if((data->average > MOVING_AVERAGE_MAX_LENGTH) || (data->average < 1)) {
@@ -146,11 +144,8 @@ BootloaderHandleMessageResponse get_configuration(const GetConfiguration *data, 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-
-
-
 bool handle_weight_callback(void) {
-	return handle_callback_value_callback(&callback_value_weight, FID_CALLBACK_WEIGHT);
+	return handle_callback_value_callback_int32_t(&callback_value_weight, FID_CALLBACK_WEIGHT);
 }
 
 void communication_tick(void) {
@@ -158,7 +153,7 @@ void communication_tick(void) {
 }
 
 void communication_init(void) {
-	callback_value_init(&callback_value_weight, hx711_get_weight);;
+	callback_value_init_int32_t(&callback_value_weight, hx711_get_weight);
 
 	communication_callback_init();
 }
