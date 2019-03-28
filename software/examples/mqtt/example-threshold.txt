@@ -7,4 +7,4 @@ setup:
 	
 	# Configure threshold for weight "greater than 200 g"
 	# with a debounce period of 1s (1000ms)
-	publish '{"period": 1000, "value_has_to_change": false, "option": "greater", "min": 200, "max": 0}' to tinkerforge/request/load_cell_v2_bricklet/XYZ/set_weight_callback_configuration  
+	publish '{"period": 1000, "value_has_to_change": false, "option": "greater", "min": 200, "max": 0}' to tinkerforge/request/load_cell_v2_bricklet/XYZ/set_weight_callback_configuration
