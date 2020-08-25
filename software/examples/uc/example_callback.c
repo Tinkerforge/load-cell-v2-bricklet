@@ -1,5 +1,3 @@
-
-
 #include "bindings/hal_common.h"
 #include "bindings/bricklet_load_cell_v2.h"
 
@@ -7,15 +5,12 @@
 
 void check(int rc, const char* msg);
 
-
-
 // Callback function for weight callback
 void weight_handler(TF_LoadCellV2 *device, int32_t weight, void *user_data) {
 	(void)device; (void)user_data; // avoid unused parameter warning
 
 	tf_hal_printf("Weight: %d g\n", weight);
 }
-
 
 TF_LoadCellV2 lc;
 

@@ -1,14 +1,9 @@
-
-
 #include "bindings/hal_common.h"
 #include "bindings/bricklet_load_cell_v2.h"
 
 #define UID "XYZ" // Change XYZ to the UID of your Load Cell Bricklet 2.0
 
 void check(int rc, const char* msg);
-
-
-
 
 TF_LoadCellV2 lc;
 
