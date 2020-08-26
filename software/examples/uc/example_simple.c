@@ -11,13 +11,11 @@ void example_setup(TF_HalContext *hal) {
 	// Create device object
 	check(tf_load_cell_v2_create(&lc, UID, hal), "create device object");
 
-
 	// Get current weight
 	int32_t weight;
 	check(tf_load_cell_v2_get_weight(&lc, &weight), "get weight");
 
 	tf_hal_printf("Weight: %d g\n", weight);
-
 }
 
 void example_loop(TF_HalContext *hal) {
