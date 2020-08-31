@@ -19,7 +19,7 @@ void example_setup(TF_HalContext *hal) {
 	int32_t weight;
 	check(tf_load_cell_v2_get_weight(&lc, &weight), "get weight");
 
-	tf_hal_printf("Weight: %d g\n", weight);
+	tf_hal_printf("Weight: %I32d g\n", weight);
 }
 
 void example_loop(TF_HalContext *hal) {

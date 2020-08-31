@@ -13,7 +13,7 @@ void example_loop(TF_HalContext *hal);
 static void weight_handler(TF_LoadCellV2 *device, int32_t weight, void *user_data) {
 	(void)device; (void)user_data; // avoid unused parameter warning
 
-	tf_hal_printf("Weight: %d g\n", weight);
+	tf_hal_printf("Weight: %I32d g\n", weight);
 }
 
 static TF_LoadCellV2 lc;
