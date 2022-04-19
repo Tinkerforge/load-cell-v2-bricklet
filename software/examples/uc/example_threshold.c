@@ -9,8 +9,8 @@
 
 void check(int rc, const char* msg);
 
-void example_setup(TF_HalContext *hal);
-void example_loop(TF_HalContext *hal);
+void example_setup(TF_HAL *hal);
+void example_loop(TF_HAL *hal);
 
 
 // Callback function for weight callback
@@ -22,7 +22,7 @@ static void weight_handler(TF_LoadCellV2 *device, int32_t weight, void *user_dat
 
 static TF_LoadCellV2 lc;
 
-void example_setup(TF_HalContext *hal) {
+void example_setup(TF_HAL *hal) {
 	// Create device object
 	check(tf_load_cell_v2_create(&lc, UID, hal), "create device object");
 
@@ -36,7 +36,7 @@ void example_setup(TF_HalContext *hal) {
 	tf_load_cell_v2_set_weight_callback_configuration(&lc, 1000, false, '>', 200, 0);
 }
 
-void example_loop(TF_HalContext *hal) {
+void example_loop(TF_HAL *hal) {
 	// Poll for callbacks
 	tf_hal_callback_tick(hal, 0);
 }
